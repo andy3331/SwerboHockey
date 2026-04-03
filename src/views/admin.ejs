@@ -1,0 +1,978 @@
+<%- include("partials/head") %>
+<%- include("partials/header") %>
+
+<main>
+  <section class="page-hero">
+    <div class="shell page-hero-grid">
+      <div>
+        <p class="eyebrow">Admin overview</p>
+        <h1>Clinic, booking, lead, and follow-up visibility for the MVP.</h1>
+        <p class="page-intro">
+          This lightweight admin view is built for fast internal follow-up: manage clinic sessions, see who is booked or waiting, and keep lead and private inquiry queues moving without overbuilding back-office tooling.
+        </p>
+      </div>
+      <div class="page-hero-panel">
+        <article class="mini-stat">
+          <span>Total leads</span>
+          <strong><%= overview.totals.leads %></strong>
+        </article>
+        <article class="mini-stat">
+          <span>Active bookings</span>
+          <strong><%= overview.totals.activeBookings %></strong>
+        </article>
+        <article class="mini-stat">
+          <span>Waitlist demand</span>
+          <strong><%= overview.totals.waitlistEntries %></strong>
+        </article>
+        <article class="mini-stat">
+          <span>Private inquiries needing response</span>
+          <strong><%= overview.totals.privateInquiriesNeedingResponse %></strong>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <% if (adminNotice) { %>
+        <div class="notice notice-info"><%= adminNotice %></div>
+      <% } %>
+      <% if (adminError) { %>
+        <div class="notice notice-error"><%= adminError %></div>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell admin-stats">
+      <article class="content-card admin-stat-card">
+        <p class="eyebrow">Clinics</p>
+        <h2><%= overview.totals.clinics %></h2>
+      </article>
+      <article class="content-card admin-stat-card">
+        <p class="eyebrow">Leads</p>
+        <h2><%= overview.totals.leads %></h2>
+      </article>
+      <article class="content-card admin-stat-card">
+        <p class="eyebrow">Bookings</p>
+        <h2><%= overview.totals.bookings %></h2>
+      </article>
+      <article class="content-card admin-stat-card">
+        <p class="eyebrow">Waitlist</p>
+        <h2><%= overview.totals.waitlistEntries %></h2>
+      </article>
+      <article class="content-card admin-stat-card">
+        <p class="eyebrow">Private follow-up</p>
+        <h2><%= overview.totals.privateInquiriesNeedingResponse %></h2>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell admin-grid">
+      <article class="content-card">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Upcoming clinics summary</p>
+          <h2>Quick session visibility and actions.</h2>
+        </div>
+        <div class="admin-list">
+          <% overview.clinics.forEach((clinic) => { %>
+            <div class="admin-row">
+              <div>
+                <strong><%= clinic.title %></strong>
+                <p><%= clinic.dateLabel %> | <%= clinic.start_time %> to <%= clinic.end_time %></p>
+              </div>
+              <div class="admin-metrics">
+                <span class="status-pill status-<%= clinic.adminSummaryStatus.tone %>"><%= clinic.adminSummaryStatus.label %></span>
+                <span><%= clinic.enrolled_count %>/<%= clinic.max_enrollment %> enrolled</span>
+                <span><%= clinic.activeWaitlistCount %> waitlist</span>
+              </div>
+              <div class="admin-row-actions">
+                <% if (clinic.is_visible) { %>
+                  <a class="text-link" href="/clinics/<%= clinic.slug %>">View details</a>
+                <% } else { %>
+                  <span class="table-subtle">Hidden from public site</span>
+                <% } %>
+                <% if (clinic.clinic_status !== 'full' && clinic.clinic_status !== 'canceled') { %>
+                  <form method="post" action="/admin/clinics/<%= clinic.id %>/status">
+                    <input type="hidden" name="clinic_status" value="full" />
+                    <button class="button button-ghost button-small" type="submit">Mark full</button>
+                  </form>
+                <% } %>
+                <% if (clinic.clinic_status !== 'canceled') { %>
+                  <form method="post" action="/admin/clinics/<%= clinic.id %>/status">
+                    <input type="hidden" name="clinic_status" value="canceled" />
+                    <button class="button button-ghost button-small" type="submit">Cancel clinic</button>
+                  </form>
+                <% } %>
+                <a class="text-link" href="#clinic-<%= clinic.id %>">Edit</a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </article>
+
+      <article class="content-card">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Recent bookings</p>
+          <h2>Latest confirmed demand.</h2>
+        </div>
+        <div class="admin-list">
+          <% if (overview.recentBookings.length) { %>
+            <% overview.recentBookings.forEach((booking) => { %>
+              <div class="admin-row">
+                <div>
+                  <strong><%= booking.parentName %></strong>
+                  <p><%= booking.clinicTitle %></p>
+                </div>
+                <div class="admin-metrics">
+                  <span><%= booking.booking_status %></span>
+                  <span><%= booking.confirmation_code %></span>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <p class="section-copy">No bookings yet.</p>
+          <% } %>
+        </div>
+      </article>
+
+      <article class="content-card">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Recent waitlist entries</p>
+          <h2>Families waiting on an opening.</h2>
+        </div>
+        <div class="admin-list">
+          <% if (overview.recentWaitlistEntries.length) { %>
+            <% overview.recentWaitlistEntries.forEach((entry) => { %>
+              <div class="admin-row">
+                <div>
+                  <strong><%= entry.parentName %></strong>
+                  <p><%= entry.clinicTitle %></p>
+                </div>
+                <div class="admin-metrics">
+                  <span><%= entry.waitlist_status %></span>
+                  <span>Priority <%= entry.priority_order %></span>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <p class="section-copy">No waitlist entries yet.</p>
+          <% } %>
+        </div>
+      </article>
+
+      <article class="content-card">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Private inquiries</p>
+          <h2>Who needs a response soon.</h2>
+        </div>
+        <div class="admin-list">
+          <% if (overview.allPrivateInquiries.length) { %>
+            <% overview.allPrivateInquiries.slice(0, 5).forEach((inquiry) => { %>
+              <div class="admin-row">
+                <div>
+                  <strong><%= inquiry.parentName %></strong>
+                  <p><%= inquiry.playerName %> | <%= inquiry.availability %></p>
+                </div>
+                <div class="admin-metrics">
+                  <span class="status-pill status-<%= inquiry.tone %>"><%= inquiry.inquiry_status %></span>
+                  <span>Due <%= inquiry.dueDateLabel %></span>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <p class="section-copy">No private inquiries yet.</p>
+          <% } %>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell admin-grid">
+      <article class="content-card">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Add clinic</p>
+          <h2>Create a new clinic session.</h2>
+        </div>
+        <form class="stack-form admin-form admin-form-inline" method="post" action="/admin/clinics">
+          <div class="admin-form-grid">
+            <label>
+              Title
+              <input name="title" required />
+            </label>
+            <label>
+              Status
+              <select name="clinic_status">
+                <option value="open">Open</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="tentative" selected>Tentative</option>
+                <option value="full">Full</option>
+              </select>
+            </label>
+            <label>
+              Coach
+              <select name="coach_id" required>
+                <% overview.coaches.forEach((coach) => { %>
+                  <option value="<%= coach.id %>"><%= coach.full_name %></option>
+                <% }) %>
+              </select>
+            </label>
+            <label>
+              Location
+              <select name="location_id" required>
+                <% overview.locations.forEach((location) => { %>
+                  <option value="<%= location.id %>"><%= location.name %> - <%= location.city %>, <%= location.state %></option>
+                <% }) %>
+              </select>
+            </label>
+            <label>
+              Date
+              <input type="date" name="date" required />
+            </label>
+            <label>
+              Skill band
+              <input name="skill_band" required />
+            </label>
+            <label>
+              Start time
+              <input name="start_time" placeholder="5:30 PM" required />
+            </label>
+            <label>
+              End time
+              <input name="end_time" placeholder="6:40 PM" required />
+            </label>
+            <label>
+              Age minimum
+              <input type="number" min="5" max="18" name="age_min" value="6" required />
+            </label>
+            <label>
+              Age maximum
+              <input type="number" min="5" max="18" name="age_max" value="14" required />
+            </label>
+            <label>
+              Minimum enrollment
+              <input type="number" min="1" name="minimum_enrollment" value="6" required />
+            </label>
+            <label>
+              Target enrollment
+              <input type="number" min="1" name="target_enrollment" value="8" required />
+            </label>
+            <label>
+              Max enrollment
+              <input type="number" min="1" name="max_enrollment" value="10" required />
+            </label>
+            <label>
+              Enrolled count
+              <input type="number" min="0" name="enrolled_count" value="0" required />
+            </label>
+            <label>
+              Waitlist count
+              <input type="number" min="0" name="waitlist_count" value="0" required />
+            </label>
+            <label class="checkbox-field">
+              <input type="checkbox" name="is_visible" value="true" checked />
+              Visible on website
+            </label>
+          </div>
+          <label>
+            Description
+            <textarea name="description" rows="4"></textarea>
+          </label>
+          <label>
+            Equipment notes
+            <textarea name="equipment_notes" rows="3"></textarea>
+          </label>
+          <label>
+            Session focus / marketing note
+            <textarea name="marketing_notes" rows="3"></textarea>
+          </label>
+          <div class="admin-actions">
+            <button class="button" type="submit">Create Clinic</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="content-card">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Add lead</p>
+          <h2>Create a manual lead record.</h2>
+        </div>
+        <form class="stack-form admin-form admin-form-inline" method="post" action="/admin/leads">
+          <div class="admin-form-grid">
+            <label>
+              Parent first name
+              <input name="parent_first_name" required />
+            </label>
+            <label>
+              Parent last name
+              <input name="parent_last_name" required />
+            </label>
+            <label>
+              Parent email
+              <input type="email" name="parent_email" required />
+            </label>
+            <label>
+              Parent phone
+              <input name="parent_phone" />
+            </label>
+            <label>
+              Player first name
+              <input name="player_first_name" />
+            </label>
+            <label>
+              Player last name
+              <input name="player_last_name" />
+            </label>
+            <label>
+              Player age
+              <input name="player_age" />
+            </label>
+            <label>
+              Skill level
+              <input name="player_skill_level" />
+            </label>
+            <label>
+              Lead status
+              <input name="lead_status" value="new" required />
+            </label>
+            <label>
+              Source detail
+              <input name="source_detail" value="manual_admin_entry" />
+            </label>
+            <label>
+              Assigned owner
+              <input name="assigned_owner" value="coach-swerbo" />
+            </label>
+            <label>
+              Assign to clinic
+              <select name="clinic_id">
+                <option value="">No clinic yet</option>
+                <% overview.clinics.forEach((clinic) => { %>
+                  <option value="<%= clinic.id %>"><%= clinic.title %> | <%= clinic.dateLabel %></option>
+                <% }) %>
+              </select>
+            </label>
+            <label>
+              Session placement
+              <select name="assignment_type">
+                <option value="">Lead only</option>
+                <option value="booking">Booked / attending</option>
+                <option value="waitlist">Waitlist</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            Goals
+            <textarea name="goals" rows="3"></textarea>
+          </label>
+          <label>
+            Availability notes
+            <textarea name="availability_notes" rows="3"></textarea>
+          </label>
+          <label>
+            Internal notes
+            <textarea name="notes_internal" rows="3"></textarea>
+          </label>
+          <div class="admin-actions">
+            <button class="button" type="submit">Create Lead</button>
+          </div>
+        </form>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">Bookings view</p>
+        <h2>All bookings with contact and payment visibility.</h2>
+      </div>
+      <% if (overview.allBookings.length) { %>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Parent</th>
+                <th>Player</th>
+                <th>Clinic</th>
+                <th>Payment</th>
+                <th>Booking</th>
+                <th>Contact</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% overview.allBookings.forEach((booking) => { %>
+                <tr>
+                  <td><strong><%= booking.parentName %></strong></td>
+                  <td><%= booking.playerName %></td>
+                  <td><%= booking.clinicTitle %><br /><span class="table-subtle"><%= booking.clinicDateLabel %></span></td>
+                  <td><span class="status-pill status-<%= booking.paymentTone %>"><%= booking.payment_status %></span></td>
+                  <td><span class="status-pill status-<%= booking.statusTone %>"><%= booking.booking_status %></span></td>
+                  <td><%= booking.parentEmail %><br /><span class="table-subtle"><%= booking.parentPhone %></span></td>
+                  <td><%= booking.createdDateLabel %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="content-card empty-state">
+          <p class="eyebrow">Bookings view</p>
+          <h3>No bookings yet.</h3>
+          <p class="section-copy">Bookings will appear here as families book clinics or are added manually.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">Waitlist view</p>
+        <h2>Queue position, contact info, and promotion actions.</h2>
+      </div>
+      <% if (overview.allWaitlistEntries.length) { %>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Clinic</th>
+                <th>Parent</th>
+                <th>Player</th>
+                <th>Contact</th>
+                <th>Queue</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% overview.allWaitlistEntries.forEach((entry) => { %>
+                <tr>
+                  <td><%= entry.clinicTitle %><br /><span class="table-subtle"><%= entry.clinicDateLabel %></span></td>
+                  <td><strong><%= entry.parentName %></strong></td>
+                  <td><%= entry.playerName %></td>
+                  <td><%= entry.parentEmail %><br /><span class="table-subtle"><%= entry.parentPhone %></span></td>
+                  <td>Priority <%= entry.priority_order %></td>
+                  <td><span class="status-pill status-<%= entry.statusTone %>"><%= entry.waitlist_status %></span></td>
+                  <td>
+                    <div class="table-actions">
+                      <form method="post" action="/admin/waitlist/<%= entry.id %>/promote">
+                        <button class="button button-ghost button-small" type="submit" <%= entry.canPromote ? '' : 'disabled' %>>Promote to booking</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="content-card empty-state">
+          <p class="eyebrow">Waitlist view</p>
+          <h3>No active waitlist entries.</h3>
+          <p class="section-copy">Full clinics and manual queue additions will appear here.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">Private lesson inquiries</p>
+        <h2>Availability, goals, and follow-up status.</h2>
+      </div>
+      <% if (overview.allPrivateInquiries.length) { %>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Parent</th>
+                <th>Player</th>
+                <th>Availability</th>
+                <th>Goals</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% overview.allPrivateInquiries.forEach((inquiry) => { %>
+                <tr class="<%= inquiry.needsResponse ? 'table-row-urgent' : '' %>">
+                  <td>
+                    <strong><%= inquiry.parentName %></strong><br />
+                    <span class="table-subtle"><%= inquiry.parentEmail %> | <%= inquiry.parentPhone %></span>
+                  </td>
+                  <td><%= inquiry.playerName %><br /><span class="table-subtle">Age <%= inquiry.playerAge || 'n/a' %></span></td>
+                  <td><%= inquiry.availability %></td>
+                  <td><%= inquiry.goals %></td>
+                  <td>
+                    <span class="status-pill status-<%= inquiry.tone %>"><%= inquiry.inquiry_status %></span><br />
+                    <span class="table-subtle">Due <%= inquiry.dueDateLabel %></span>
+                  </td>
+                  <td>
+                    <div class="table-actions table-actions-stack">
+                      <form method="post" action="/admin/private-inquiries/<%= inquiry.id %>">
+                        <input type="hidden" name="inquiry_status" value="contacted" />
+                        <button class="button button-ghost button-small" type="submit">Mark contacted</button>
+                      </form>
+                      <form method="post" action="/admin/private-inquiries/<%= inquiry.id %>">
+                        <input type="hidden" name="inquiry_status" value="scheduled" />
+                        <button class="button button-ghost button-small" type="submit">Mark scheduled</button>
+                      </form>
+                      <form method="post" action="/admin/private-inquiries/<%= inquiry.id %>">
+                        <input type="hidden" name="inquiry_status" value="closed" />
+                        <button class="button button-ghost button-small" type="submit">Mark closed</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="content-card empty-state">
+          <p class="eyebrow">Private lesson inquiries</p>
+          <h3>No private inquiries yet.</h3>
+          <p class="section-copy">Private lesson requests will appear here with availability and goals for follow-up.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">Leads view</p>
+        <h2>All leads with quick follow-up visibility.</h2>
+      </div>
+      <% if (overview.allLeads.length) { %>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Parent</th>
+                <th>Player</th>
+                <th>Age</th>
+                <th>Status</th>
+                <th>Source</th>
+                <th>Created</th>
+                <th>Follow-up</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% overview.allLeads.forEach((lead) => { %>
+                <tr class="<%= lead.isNewLead ? 'table-row-urgent' : lead.needsFollowUp ? 'table-row-pending' : '' %>">
+                  <td><strong><%= lead.parent_first_name %> <%= lead.parent_last_name %></strong></td>
+                  <td><%= lead.player_first_name || 'Not set' %> <%= lead.player_last_name || '' %></td>
+                  <td><%= lead.player_age || 'Not set' %></td>
+                  <td><span class="status-pill status-<%= lead.followUpTone %>"><%= lead.lead_status %></span></td>
+                  <td><%= lead.sourceLabel %></td>
+                  <td><%= lead.createdDateLabel %></td>
+                  <td>
+                    <% if (lead.isNewLead) { %>
+                      <span class="status-pill status-urgent">New lead</span>
+                    <% } else if (lead.needsFollowUp) { %>
+                      <span class="status-pill status-pending">Needs follow-up</span>
+                    <% } else { %>
+                      <span class="status-pill status-completed">In progress / complete</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="content-card empty-state">
+          <p class="eyebrow">Leads view</p>
+          <h3>No leads yet.</h3>
+          <p class="section-copy">All new website and manual leads will appear here.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">Session assignments</p>
+        <h2>Link existing leads to a specific clinic.</h2>
+        <p class="section-copy">
+          Use this section to attach an existing lead to a clinic as booked or waitlisted. Linked roster counts may be lower than enrolled totals until older offline families are added as leads.
+        </p>
+      </div>
+      <% if (overview.clinics.length) { %>
+        <div class="admin-session-stack">
+          <% overview.clinics.forEach((clinic) => { %>
+          <article class="content-card admin-session-card">
+            <div class="admin-session-head">
+              <div>
+                <p class="eyebrow"><%= clinic.is_visible ? 'Visible clinic' : 'Hidden clinic' %></p>
+                <h3><%= clinic.title %></h3>
+                <p class="section-copy"><%= clinic.dateLabel %> | <%= clinic.start_time %> to <%= clinic.end_time %> | <%= clinic.status.label %></p>
+              </div>
+              <div class="admin-metrics">
+                <span><%= clinic.enrolled_count %>/<%= clinic.max_enrollment %> enrolled</span>
+                <span><%= clinic.activeBookingCount %> linked attendees</span>
+                <span><%= clinic.activeWaitlistCount %> linked waitlist</span>
+              </div>
+            </div>
+
+            <form class="stack-form admin-form admin-form-inline admin-session-form" method="post" action="/admin/session-assignments">
+              <input type="hidden" name="clinic_id" value="<%= clinic.id %>" />
+              <div class="admin-form-grid">
+                <label>
+                  Existing lead
+                  <select name="lead_id" <%= overview.allLeads.length ? '' : 'disabled' %> required>
+                    <% if (!overview.allLeads.length) { %>
+                      <option value="">Add a lead first</option>
+                    <% } else { %>
+                      <option value="">Choose a lead</option>
+                      <% overview.allLeads.forEach((lead) => { %>
+                        <option value="<%= lead.id %>">
+                          <%= lead.parent_first_name %> <%= lead.parent_last_name %> | <%= lead.player_first_name %> <%= lead.player_last_name %> | <%= lead.sourceLabel %>
+                        </option>
+                      <% }) %>
+                    <% } %>
+                  </select>
+                </label>
+                <label>
+                  Assign as
+                  <select name="assignment_type">
+                    <option value="booking">Booked / attending</option>
+                    <option value="waitlist">Waitlist</option>
+                  </select>
+                </label>
+              </div>
+              <div class="admin-actions">
+                <button class="button" type="submit" <%= overview.allLeads.length ? '' : 'disabled' %>>Assign Lead to Session</button>
+              </div>
+            </form>
+
+            <div class="admin-roster-grid">
+              <article class="admin-roster-panel">
+                <div class="admin-roster-head">
+                  <h3>Attending</h3>
+                  <span><%= clinic.bookingRoster.length %> linked</span>
+                </div>
+                <% if (clinic.bookingRoster.length) { %>
+                  <div class="admin-roster-list">
+                    <% clinic.bookingRoster.forEach((entry) => { %>
+                      <div class="admin-roster-row">
+                        <div>
+                          <strong><%= entry.parentName %></strong>
+                          <p><%= entry.playerName %><%= entry.playerAge ? ` | Age ${entry.playerAge}` : '' %></p>
+                        </div>
+                        <div class="admin-roster-actions">
+                          <div class="admin-roster-meta">
+                            <span class="source-pill"><%= entry.sourceLabel %></span>
+                            <% if (entry.sourceDetail) { %>
+                              <span><%= entry.sourceDetail %></span>
+                            <% } %>
+                            <% if (entry.confirmationCode) { %>
+                              <span><%= entry.confirmationCode %></span>
+                            <% } %>
+                          </div>
+                          <form method="post" action="/admin/session-assignments/remove">
+                            <input type="hidden" name="assignment_id" value="<%= entry.id %>" />
+                            <input type="hidden" name="assignment_type" value="booking" />
+                            <button class="button button-ghost button-small" type="submit">Remove from session</button>
+                          </form>
+                        </div>
+                      </div>
+                    <% }) %>
+                  </div>
+                <% } else { %>
+                  <p class="section-copy">No linked attendees yet. You can attach existing leads above.</p>
+                <% } %>
+              </article>
+
+              <article class="admin-roster-panel">
+                <div class="admin-roster-head">
+                  <h3>Waitlist</h3>
+                  <span><%= clinic.waitlistRoster.length %> linked</span>
+                </div>
+                <% if (clinic.waitlistRoster.length) { %>
+                  <div class="admin-roster-list">
+                    <% clinic.waitlistRoster.forEach((entry) => { %>
+                      <div class="admin-roster-row">
+                        <div>
+                          <strong><%= entry.parentName %></strong>
+                          <p><%= entry.playerName %><%= entry.playerAge ? ` | Age ${entry.playerAge}` : '' %></p>
+                        </div>
+                        <div class="admin-roster-actions">
+                          <div class="admin-roster-meta">
+                            <span class="source-pill"><%= entry.sourceLabel %></span>
+                            <% if (entry.sourceDetail) { %>
+                              <span><%= entry.sourceDetail %></span>
+                            <% } %>
+                            <% if (entry.priorityOrder) { %>
+                              <span>Priority <%= entry.priorityOrder %></span>
+                            <% } %>
+                          </div>
+                          <form method="post" action="/admin/session-assignments/remove">
+                            <input type="hidden" name="assignment_id" value="<%= entry.id %>" />
+                            <input type="hidden" name="assignment_type" value="waitlist" />
+                            <button class="button button-ghost button-small" type="submit">Remove from waitlist</button>
+                          </form>
+                        </div>
+                      </div>
+                    <% }) %>
+                  </div>
+                <% } else { %>
+                  <p class="section-copy">No linked waitlist entries yet.</p>
+                <% } %>
+              </article>
+            </div>
+          </article>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="content-card empty-state">
+          <p class="eyebrow">Session assignments</p>
+          <h3>No clinics available yet.</h3>
+          <p class="section-copy">Create a clinic first, then attach leads as bookings or waitlist entries.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">Manage clinics</p>
+        <h2>Edit session details and availability.</h2>
+      </div>
+      <% if (overview.clinics.length) { %>
+        <div class="admin-edit-stack">
+          <% overview.clinics.forEach((clinic) => { %>
+          <details class="admin-edit-card" id="clinic-<%= clinic.id %>">
+            <summary class="admin-summary">
+              <div>
+                <strong><%= clinic.title %></strong>
+                <p><%= clinic.dateLabel %> | <%= clinic.start_time %> to <%= clinic.end_time %></p>
+              </div>
+              <div class="admin-metrics">
+                <span><%= clinic.status.label %></span>
+                <span><%= clinic.enrolled_count %>/<%= clinic.max_enrollment %> enrolled</span>
+                <span><%= clinic.waitlist_count %> waitlist</span>
+              </div>
+            </summary>
+            <form class="stack-form admin-form" method="post" action="/admin/clinics/<%= clinic.id %>">
+              <div class="admin-form-grid">
+                <label>
+                  Title
+                  <input name="title" value="<%= clinic.title %>" required />
+                </label>
+                <label>
+                  Status
+                  <select name="clinic_status">
+                    <option value="open" <%= clinic.clinic_status === 'open' ? 'selected' : '' %>>Open</option>
+                    <option value="confirmed" <%= clinic.clinic_status === 'confirmed' ? 'selected' : '' %>>Confirmed</option>
+                    <option value="tentative" <%= clinic.clinic_status === 'tentative' ? 'selected' : '' %>>Tentative</option>
+                    <option value="full" <%= clinic.clinic_status === 'full' ? 'selected' : '' %>>Full</option>
+                    <option value="canceled" <%= clinic.clinic_status === 'canceled' ? 'selected' : '' %>>Canceled</option>
+                  </select>
+                </label>
+                <label>
+                  Coach
+                  <select name="coach_id" required>
+                    <% overview.coaches.forEach((coach) => { %>
+                      <option value="<%= coach.id %>" <%= clinic.coach_id === coach.id ? 'selected' : '' %>><%= coach.full_name %></option>
+                    <% }) %>
+                  </select>
+                </label>
+                <label>
+                  Location
+                  <select name="location_id" required>
+                    <% overview.locations.forEach((location) => { %>
+                      <option value="<%= location.id %>" <%= clinic.location_id === location.id ? 'selected' : '' %>><%= location.name %> - <%= location.city %>, <%= location.state %></option>
+                    <% }) %>
+                  </select>
+                </label>
+                <label>
+                  Date
+                  <input type="date" name="date" value="<%= clinic.date %>" required />
+                </label>
+                <label>
+                  Skill band
+                  <input name="skill_band" value="<%= clinic.skill_band %>" required />
+                </label>
+                <label>
+                  Start time
+                  <input name="start_time" value="<%= clinic.start_time %>" required />
+                </label>
+                <label>
+                  End time
+                  <input name="end_time" value="<%= clinic.end_time %>" required />
+                </label>
+                <label>
+                  Age minimum
+                  <input type="number" min="5" max="18" name="age_min" value="<%= clinic.age_min %>" required />
+                </label>
+                <label>
+                  Age maximum
+                  <input type="number" min="5" max="18" name="age_max" value="<%= clinic.age_max %>" required />
+                </label>
+                <label>
+                  Minimum enrollment
+                  <input type="number" min="1" name="minimum_enrollment" value="<%= clinic.minimum_enrollment %>" required />
+                </label>
+                <label>
+                  Target enrollment
+                  <input type="number" min="1" name="target_enrollment" value="<%= clinic.target_enrollment %>" required />
+                </label>
+                <label>
+                  Max enrollment
+                  <input type="number" min="1" name="max_enrollment" value="<%= clinic.max_enrollment %>" required />
+                </label>
+                <label>
+                  Enrolled count
+                  <input type="number" min="0" name="enrolled_count" value="<%= clinic.enrolled_count %>" required />
+                </label>
+                <label>
+                  Waitlist count
+                  <input type="number" min="0" name="waitlist_count" value="<%= clinic.waitlist_count %>" required />
+                </label>
+                <label class="checkbox-field">
+                  <input type="checkbox" name="is_visible" value="true" <%= clinic.is_visible ? 'checked' : '' %> />
+                  Visible on website
+                </label>
+              </div>
+              <label>
+                Description
+                <textarea name="description" rows="4"><%= clinic.description %></textarea>
+              </label>
+              <label>
+                Session focus / marketing note
+                <textarea name="marketing_notes" rows="3"><%= clinic.marketing_notes %></textarea>
+              </label>
+              <label>
+                Equipment notes
+                <textarea name="equipment_notes" rows="3"><%= clinic.equipment_notes %></textarea>
+              </label>
+              <div class="admin-actions">
+                <button class="button" type="submit">Save Clinic</button>
+              </div>
+            </form>
+          </details>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="content-card empty-state">
+          <p class="eyebrow">Manage clinics</p>
+          <h3>No clinics yet.</h3>
+          <p class="section-copy">Use the create clinic form above to add the first session.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">Manage leads</p>
+        <h2>Edit contact info, status, and notes.</h2>
+      </div>
+      <% if (overview.allLeads.length) { %>
+        <div class="admin-edit-stack">
+          <% overview.allLeads.forEach((lead) => { %>
+          <details class="admin-edit-card">
+            <summary class="admin-summary">
+              <div>
+                <strong><%= lead.parent_first_name %> <%= lead.parent_last_name %></strong>
+                <p><%= lead.player_first_name %> <%= lead.player_last_name %> | Age <%= lead.player_age || 'Not set' %></p>
+              </div>
+              <div class="admin-metrics">
+                <span class="status-pill status-<%= lead.followUpTone %>"><%= lead.lead_status %></span>
+                <span><%= lead.sourceLabel %></span>
+                <span><%= lead.createdDateLabel %></span>
+                <span><%= lead.activeAssignments.length ? `${lead.activeAssignments.length} linked session${lead.activeAssignments.length === 1 ? '' : 's'}` : 'No linked session' %></span>
+              </div>
+            </summary>
+            <form class="stack-form admin-form" method="post" action="/admin/leads/<%= lead.id %>">
+              <div class="admin-form-grid">
+                <label>
+                  Parent first name
+                  <input name="parent_first_name" value="<%= lead.parent_first_name %>" required />
+                </label>
+                <label>
+                  Parent last name
+                  <input name="parent_last_name" value="<%= lead.parent_last_name %>" required />
+                </label>
+                <label>
+                  Parent email
+                  <input type="email" name="parent_email" value="<%= lead.parent_email %>" required />
+                </label>
+                <label>
+                  Parent phone
+                  <input name="parent_phone" value="<%= lead.parent_phone %>" />
+                </label>
+                <label>
+                  Player first name
+                  <input name="player_first_name" value="<%= lead.player_first_name %>" />
+                </label>
+                <label>
+                  Player last name
+                  <input name="player_last_name" value="<%= lead.player_last_name %>" />
+                </label>
+                <label>
+                  Player age
+                  <input name="player_age" value="<%= lead.player_age %>" />
+                </label>
+                <label>
+                  Skill level
+                  <input name="player_skill_level" value="<%= lead.player_skill_level %>" />
+                </label>
+                <label>
+                  Lead status
+                  <input name="lead_status" value="<%= lead.lead_status %>" required />
+                </label>
+                <label>
+                  Source detail
+                  <input name="source_detail" value="<%= lead.source_detail %>" />
+                </label>
+                <label>
+                  Assigned owner
+                  <input name="assigned_owner" value="<%= lead.assigned_owner %>" />
+                </label>
+              </div>
+              <label>
+                Goals
+                <textarea name="goals" rows="3"><%= lead.goals %></textarea>
+              </label>
+              <label>
+                Availability notes
+                <textarea name="availability_notes" rows="3"><%= lead.availability_notes %></textarea>
+              </label>
+              <label>
+                Internal notes
+                <textarea name="notes_internal" rows="3"><%= lead.notes_internal %></textarea>
+              </label>
+              <div class="admin-assignment-summary">
+                <p class="eyebrow">Current session links</p>
+                <p><%= lead.activeAssignmentSummary %></p>
+              </div>
+              <div class="admin-actions">
+                <button class="button" type="submit">Save Lead</button>
+              </div>
+            </form>
+          </details>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="content-card empty-state">
+          <p class="eyebrow">Manage leads</p>
+          <h3>No leads yet.</h3>
+          <p class="section-copy">New website leads and manual leads will appear here for editing and follow-up.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+</main>
+
+<%- include("partials/footer") %>

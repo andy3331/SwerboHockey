@@ -1,0 +1,19 @@
+{
+  "name": "swerbhockey",
+  "version": "1.0.0",
+  "description": "This package contains the scalable v1 system specification for: - bookings - clinics - private lesson inquiries - waitlists - lead capture - Codex agent workflow",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node src/server.js",
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "ejs": "^5.0.1",
+    "express": "^5.2.1"
+  }
+}

@@ -1,0 +1,82 @@
+<%- include("partials/head") %>
+<%- include("partials/header") %>
+<%
+  const waitlistClinic = clinics.find((clinic) => clinic.status.bookingMode === "waitlist");
+  const waitlistHref = waitlistClinic ? `/clinics/${waitlistClinic.slug}` : "/contact";
+  const bookableCount = clinics.filter((clinic) => clinic.status.bookingMode === "book").length;
+  const interestCount = clinics.filter((clinic) => clinic.status.bookingMode === "interest").length;
+  const waitlistCount = clinics.filter((clinic) => clinic.status.bookingMode === "waitlist").length;
+%>
+
+<main>
+  <section class="page-hero">
+    <div class="shell page-hero-grid">
+      <div>
+        <p class="eyebrow">Upcoming clinics</p>
+        <h1>Find the right session for your player.</h1>
+        <p class="page-intro">
+          Every clinic shows age range, skill level, timing, pricing, and the right next step whether that is booking, joining a waitlist, or going more flexible.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#clinic-list">Book a Clinic</a>
+          <a class="button button-secondary" href="/private-lessons">Request a Private Lesson</a>
+          <a class="button button-ghost" href="/contact">Express Interest</a>
+        </div>
+      </div>
+      <div class="page-hero-panel">
+        <article class="mini-stat">
+          <span>Can book now</span>
+          <strong><%= bookableCount %></strong>
+        </article>
+        <article class="mini-stat">
+          <span>Can reserve interest</span>
+          <strong><%= interestCount %></strong>
+        </article>
+        <article class="mini-stat">
+          <span>Waitlist only</span>
+          <strong><%= waitlistCount %></strong>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="clinic-list">
+    <div class="shell">
+      <% if (clinics.length) { %>
+        <div class="clinic-grid">
+          <% clinics.forEach((clinic) => { %>
+            <%- include("partials/clinic-card", { clinic }) %>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <h2>New clinics are being scheduled.</h2>
+          <p>While the next set is being finalized, request a private lesson or tell us what age group and schedule works for your family.</p>
+          <div class="hero-actions">
+            <a class="button" href="/private-lessons">Request a Private Lesson</a>
+            <a class="button button-secondary" href="/contact">Express Interest</a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell fallback-band">
+      <div>
+        <p class="eyebrow">Not seeing the right fit?</p>
+        <h2>There is always a next step.</h2>
+        <p class="section-copy">
+          Request a private lesson for a flexible plan, join a waitlist, or share your availability so we can follow up with the right option.
+        </p>
+      </div>
+      <div class="fallback-actions">
+        <a class="button" href="/private-lessons">Request a Private Lesson</a>
+        <a class="button button-secondary" href="<%= waitlistHref %>">Join the Waitlist</a>
+        <a class="button button-ghost" href="/contact">Express Interest</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include("partials/footer") %>

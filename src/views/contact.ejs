@@ -1,0 +1,136 @@
+<%- include("partials/head") %>
+<%- include("partials/header") %>
+
+<main>
+  <section class="page-hero">
+    <div class="shell page-hero-grid">
+      <div>
+        <p class="eyebrow">Contact and express interest</p>
+        <h1>Not sure which option fits best?</h1>
+        <p class="page-intro">
+          Use this page for future updates, schedule questions, or when no current clinic is the right fit.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#interest-form">Express Interest</a>
+          <a class="button button-secondary" href="/clinics">Book a Clinic</a>
+          <a class="button button-ghost" href="/private-lessons">Request a Private Lesson</a>
+        </div>
+      </div>
+      <div class="page-hero-panel">
+        <article class="mini-stat">
+          <span>No good clinic match?</span>
+          <strong>Tell us the age group</strong>
+        </article>
+        <article class="mini-stat">
+          <span>Need scheduling help?</span>
+          <strong>Share days and times</strong>
+        </article>
+        <article class="mini-stat">
+          <span>Still comparing paths?</span>
+          <strong>We will route you</strong>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell detail-grid">
+      <article class="content-card">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">When to use this form</p>
+          <h2>Keep your place in the follow-up queue.</h2>
+        </div>
+        <div class="info-stack">
+          <article class="checklist-card">
+            <p class="eyebrow">Good use cases</p>
+            <h3>When no current path is quite right.</h3>
+            <p>This page is the fallback when timing, age range, or session type does not match what your family needs today.</p>
+          </article>
+          <article class="checklist-card">
+            <p class="eyebrow">Why it matters</p>
+            <h3>No interest gets lost.</h3>
+            <p>Sharing what you need helps shape future clinics and gives the program a clear reason to follow up.</p>
+          </article>
+        </div>
+        <ul class="bullet-list">
+          <li>No suitable clinic is listed yet</li>
+          <li>You want future updates for your player's age group</li>
+          <li>You are unsure whether a clinic or private lesson is the better fit</li>
+          <li>You have a specific availability window in mind</li>
+        </ul>
+      </article>
+
+      <aside class="form-panel" id="interest-form">
+        <div class="form-intro-box">
+          <p class="eyebrow">What we collect</p>
+          <ul class="form-trust-list">
+            <li>Parent contact details for follow-up</li>
+            <li>Player age, level, and the kind of help needed</li>
+            <li>Scheduling notes that make future outreach more useful</li>
+          </ul>
+        </div>
+        <p class="eyebrow">Express interest</p>
+        <h2>We will save your info for follow-up.</h2>
+        <%- include("partials/notice") %>
+        <form class="stack-form" method="post" action="/forms/general-interest">
+          <div class="form-grid">
+            <label>
+              Parent first name
+              <input name="parent_first_name" value="<%= form.parent_first_name || '' %>" required />
+            </label>
+            <label>
+              Parent last name
+              <input name="parent_last_name" value="<%= form.parent_last_name || '' %>" required />
+            </label>
+            <label>
+              Email
+              <input type="email" name="parent_email" value="<%= form.parent_email || '' %>" required />
+            </label>
+            <label>
+              Phone
+              <input type="tel" name="parent_phone" value="<%= form.parent_phone || '' %>" required />
+            </label>
+            <label>
+              Player age
+              <input type="number" min="5" max="18" name="player_age" value="<%= form.player_age || '' %>" required />
+            </label>
+            <label>
+              Player level
+              <input name="player_skill_level" value="<%= form.player_skill_level || '' %>" />
+            </label>
+            <label>
+              Interest type
+              <select name="interest_type" required>
+                <option value="">Choose one</option>
+                <option value="Future clinic updates" <%= form.interest_type === 'Future clinic updates' ? 'selected' : '' %>>Future clinic updates</option>
+                <option value="Help choosing the right option" <%= form.interest_type === 'Help choosing the right option' ? 'selected' : '' %>>Help choosing the right option</option>
+                <option value="General question" <%= form.interest_type === 'General question' ? 'selected' : '' %>>General question</option>
+              </select>
+            </label>
+            <label>
+              Desired days or times
+              <input name="availability_notes" value="<%= form.availability_notes || '' %>" />
+            </label>
+          </div>
+          <label>
+            Goals
+            <textarea name="goals" rows="4"><%= form.goals || '' %></textarea>
+          </label>
+          <label>
+            Notes
+            <textarea name="notes" rows="4"><%= form.notes || '' %></textarea>
+          </label>
+          <button class="button" type="submit">Submit Interest</button>
+        </form>
+        <div class="support-links">
+          <a href="/clinics">Want to book a clinic now?</a>
+          <a href="/private-lessons">Need a private lesson instead?</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <%- include("partials/cta-strip") %>
+</main>
+
+<%- include("partials/footer") %>

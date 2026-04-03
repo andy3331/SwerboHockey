@@ -1,0 +1,31 @@
+<header class="site-header">
+  <div class="utility-bar">
+    <div class="shell utility-shell">
+      <p>South Windsor, CT youth hockey development for ages 6-14.</p>
+      <div class="utility-links">
+        <a href="/clinics">Book a Clinic</a>
+        <a href="/private-lessons">Private Lessons</a>
+        <a href="/contact">Express Interest</a>
+      </div>
+    </div>
+  </div>
+  <div class="shell nav-shell">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">
+        <img src="/logo-swierbutowicz-hockey.svg" alt="" />
+      </span>
+      <span class="brand-copy">
+        <strong>Swierbutowicz Hockey Development</strong>
+        <small>South Windsor, CT | Ages 6-14</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a class="<%= currentPath === '/' ? 'active' : '' %>" href="/">Home</a>
+      <a class="<%= currentPath === '/about-coach' ? 'active' : '' %>" href="/about-coach">Coach</a>
+      <a class="<%= currentPath === '/clinics' ? 'active' : '' %>" href="/clinics">Clinics</a>
+      <a class="<%= currentPath === '/private-lessons' ? 'active' : '' %>" href="/private-lessons">Private Lessons</a>
+      <a class="<%= currentPath === '/contact' ? 'active' : '' %>" href="/contact">Contact</a>
+    </nav>
+    <a class="button button-small nav-book-btn" href="/clinics">Book Now</a>
+  </div>
+</header>

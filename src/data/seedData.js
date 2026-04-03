@@ -1,0 +1,132 @@
+function createSeedStore() {
+  return {
+    coaches: [
+      {
+        id: "coach-swerbo",
+        created_at: "2026-04-03T09:30:00.000Z",
+        updated_at: "2026-04-03T09:30:00.000Z",
+        display_name: "Coach Swerbo",
+        full_name: "Adam Swierbutowicz",
+        bio: "Respected local coach and former college player focused on high-repetition youth skill development.",
+        specialties: ["edge work", "puck control", "small-group development"],
+        is_active: true
+      }
+    ],
+    locations: [
+      {
+        id: "south-windsor-training",
+        created_at: "2026-04-03T09:30:00.000Z",
+        updated_at: "2026-04-03T09:30:00.000Z",
+        name: "South Windsor Training Ice",
+        address: "",
+        city: "South Windsor",
+        state: "CT",
+        zip: "",
+        contact_name: "",
+        contact_phone: "",
+        notes: "Final rink details are shared during follow-up."
+      }
+    ],
+    clinics: [
+      {
+        id: "clinic-edgework-2013-2016",
+        slug: "edge-work-and-puck-control",
+        created_at: "2026-04-03T09:30:00.000Z",
+        updated_at: "2026-04-03T09:30:00.000Z",
+        title: "Edge Work and Puck Control Clinic",
+        description: "A small-group session focused on cleaner edges, tighter turns, and stronger puck protection habits under pressure.",
+        location_id: "south-windsor-training",
+        coach_id: "coach-swerbo",
+        clinic_status: "open",
+        age_min: 9,
+        age_max: 13,
+        skill_band: "Travel and advanced house players",
+        date: "2026-04-18",
+        start_time: "5:30 PM",
+        end_time: "6:40 PM",
+        timezone: "America/New_York",
+        price_type: "contact",
+        price_amount: null,
+        deposit_amount: null,
+        minimum_enrollment: 6,
+        target_enrollment: 8,
+        max_enrollment: 10,
+        enrolled_count: 7,
+        waitlist_count: 0,
+        is_visible: true,
+        cancellation_policy: "",
+        equipment_notes: "Players should bring full gear, water, and both light and dark practice jerseys if available.",
+        marketing_notes: "Great fit for players who need more reps and more direct feedback."
+      },
+      {
+        id: "clinic-scoring-2009-2012",
+        slug: "scoring-and-attack-clinic",
+        created_at: "2026-04-03T09:30:00.000Z",
+        updated_at: "2026-04-03T09:30:00.000Z",
+        title: "Scoring and Attack Clinic",
+        description: "Finishing habits, attack decisions, and puck touches around the net in a fast-paced small-group environment.",
+        location_id: "south-windsor-training",
+        coach_id: "coach-swerbo",
+        clinic_status: "full",
+        age_min: 11,
+        age_max: 14,
+        skill_band: "Travel players ready for more game-like reps",
+        date: "2026-04-25",
+        start_time: "6:00 PM",
+        end_time: "7:10 PM",
+        timezone: "America/New_York",
+        price_type: "contact",
+        price_amount: null,
+        deposit_amount: null,
+        minimum_enrollment: 6,
+        target_enrollment: 8,
+        max_enrollment: 10,
+        enrolled_count: 10,
+        waitlist_count: 2,
+        is_visible: true,
+        cancellation_policy: "",
+        equipment_notes: "Players should bring full gear and be ready for shot volume and quick decision drills.",
+        marketing_notes: "The session is full, but the waitlist remains open."
+      },
+      {
+        id: "clinic-foundations-2016-2019",
+        slug: "skills-foundations-clinic",
+        created_at: "2026-04-03T09:30:00.000Z",
+        updated_at: "2026-04-03T09:30:00.000Z",
+        title: "Skills Foundations Clinic",
+        description: "Foundational skating, puck touches, and confidence-building reps for younger players who benefit from structure and feedback.",
+        location_id: "south-windsor-training",
+        coach_id: "coach-swerbo",
+        clinic_status: "tentative",
+        age_min: 6,
+        age_max: 10,
+        skill_band: "House and newer travel players",
+        date: "2026-05-02",
+        start_time: "4:40 PM",
+        end_time: "5:30 PM",
+        timezone: "America/New_York",
+        price_type: "contact",
+        price_amount: null,
+        deposit_amount: null,
+        minimum_enrollment: 6,
+        target_enrollment: 8,
+        max_enrollment: 10,
+        enrolled_count: 3,
+        waitlist_count: 0,
+        is_visible: true,
+        cancellation_policy: "",
+        equipment_notes: "Full gear recommended. Final confirmation is sent once minimum enrollment is reached.",
+        marketing_notes: "Families can reserve interest before the session is confirmed."
+      }
+    ],
+    leads: [],
+    bookings: [],
+    waitlistEntries: [],
+    privateInquiries: [],
+    activityLog: []
+  };
+}
+
+module.exports = {
+  createSeedStore
+};
