@@ -1,0 +1,160 @@
+<%- include("partials/head") %>
+<%- include("partials/header") %>
+
+<main>
+  <section class="page-hero">
+    <div class="shell page-hero-grid">
+      <div>
+        <p class="eyebrow">Private lessons</p>
+        <h1>Share your player's goals and we will build the right next step.</h1>
+        <p class="page-intro">
+          Private lessons are request-first so families can submit demand even before exact slots are published.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#private-request-form">Request a Private Lesson</a>
+          <a class="button button-secondary" href="/clinics">Book a Clinic</a>
+          <a class="button button-ghost" href="/contact">Express Interest</a>
+        </div>
+      </div>
+      <div class="page-hero-panel">
+        <article class="mini-stat">
+          <span>Best for</span>
+          <strong>Targeted skill work</strong>
+        </article>
+        <article class="mini-stat">
+          <span>Useful for</span>
+          <strong>Schedule flexibility</strong>
+        </article>
+        <article class="mini-stat">
+          <span>Still deciding?</span>
+          <strong>We can route you</strong>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell detail-grid">
+      <article class="content-card">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">When private is the better fit</p>
+          <h2>Focused coaching for players who need something more specific.</h2>
+        </div>
+        <div class="info-stack">
+          <article class="checklist-card">
+            <p class="eyebrow">Ideal for</p>
+            <h3>Players who need targeted attention.</h3>
+            <p>Private work is a strong fit when a player needs extra reps in one area or more direct coaching feedback.</p>
+          </article>
+          <article class="checklist-card">
+            <p class="eyebrow">Flexible path</p>
+            <h3>Built around real family schedules.</h3>
+            <p>Families can submit goals and availability first, then review next-step options instead of waiting for a posted slot.</p>
+          </article>
+        </div>
+        <ul class="bullet-list">
+          <li>Skill-specific work like skating, puck control, and finishing</li>
+          <li>Players who need more individual feedback</li>
+          <li>Families that need more flexible scheduling than posted clinics allow</li>
+          <li>Small private groups when players have compatible goals</li>
+        </ul>
+        <div class="coach-note">
+          <p class="eyebrow">Coach credibility</p>
+          <p>Coach Swerbo is known locally for clear instruction, honest feedback, and sessions built around development rather than filler.</p>
+        </div>
+      </article>
+
+      <aside class="form-panel" id="private-request-form">
+        <div class="form-intro-box">
+          <p class="eyebrow">What to expect</p>
+          <ul class="form-trust-list">
+            <li>Share player goals, level, and preferred schedule</li>
+            <li>We review whether 1-on-1 or small-group private is a better fit</li>
+            <li>Your request stays saved even before exact time slots are published</li>
+          </ul>
+        </div>
+        <p class="eyebrow">Request a private lesson</p>
+        <h2>Tell us about your player.</h2>
+        <p class="form-copy">We will review the request and follow up with next-step options based on goals and availability.</p>
+        <%- include("partials/notice") %>
+        <form class="stack-form" method="post" action="/forms/private-inquiries">
+          <div class="form-grid">
+            <label>
+              Parent first name
+              <input name="parent_first_name" value="<%= form.parent_first_name || '' %>" required />
+            </label>
+            <label>
+              Parent last name
+              <input name="parent_last_name" value="<%= form.parent_last_name || '' %>" required />
+            </label>
+            <label>
+              Email
+              <input type="email" name="parent_email" value="<%= form.parent_email || '' %>" required />
+            </label>
+            <label>
+              Phone
+              <input type="tel" name="parent_phone" value="<%= form.parent_phone || '' %>" required />
+            </label>
+            <label>
+              Player first name
+              <input name="player_first_name" value="<%= form.player_first_name || '' %>" required />
+            </label>
+            <label>
+              Player last name
+              <input name="player_last_name" value="<%= form.player_last_name || '' %>" required />
+            </label>
+            <label>
+              Player age
+              <input type="number" min="5" max="18" name="player_age" value="<%= form.player_age || '' %>" required />
+            </label>
+            <label>
+              Birth year
+              <input type="number" min="2008" max="2021" name="player_birth_year" value="<%= form.player_birth_year || '' %>" required />
+            </label>
+            <label>
+              Position
+              <input name="player_position" value="<%= form.player_position || '' %>" required />
+            </label>
+            <label>
+              Current team or level
+              <input name="player_team" value="<%= form.player_team || '' %>" required />
+            </label>
+            <label>
+              Preferred days
+              <input name="preferred_days" value="<%= form.preferred_days || '' %>" required />
+            </label>
+            <label>
+              Preferred times
+              <input name="preferred_times" value="<%= form.preferred_times || '' %>" required />
+            </label>
+            <label>
+              Willing to join a small group
+              <select name="willing_group_with_others">
+                <option value="yes" <%= form.willing_group_with_others === 'yes' ? 'selected' : '' %>>Yes</option>
+                <option value="no" <%= form.willing_group_with_others === 'no' ? 'selected' : '' %>>No</option>
+                <option value="no_preference" <%= form.willing_group_with_others === 'no_preference' ? 'selected' : '' %>>No preference</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            Goals
+            <textarea name="goals" rows="4" required><%= form.goals || '' %></textarea>
+          </label>
+          <label>
+            Notes
+            <textarea name="availability_notes" rows="4"><%= form.availability_notes || '' %></textarea>
+          </label>
+          <button class="button" type="submit">Submit Private Lesson Request</button>
+        </form>
+        <div class="support-links">
+          <a href="/clinics">Prefer a posted clinic?</a>
+          <a href="/contact">Need help choosing?</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <%- include("partials/cta-strip") %>
+</main>
+
+<%- include("partials/footer") %>

@@ -1,0 +1,214 @@
+<%- include("partials/head") %>
+<%- include("partials/header") %>
+<%
+  const profile = typeof coachProfile !== "undefined"
+    ? coachProfile
+    : {
+        imagePath: "/coach-adam.jpg",
+        imageAlt: "Coach Adam Swierbutowicz at the rink",
+        homepageIntro: [
+          "Coach Adam Swierbutowicz, known locally as Swerbo, is a major reason parents feel confident taking the next step.",
+          "His sessions focus on skating, fundamentals, and player development in a way that feels clear and credible for families."
+        ],
+        homepageHighlights: [
+          "South Windsor hockey roots",
+          "College hockey experience",
+          "Player development focus",
+          "USA Hockey certified coaching background"
+        ]
+      };
+%>
+
+<main>
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div class="hero-copy hero-stage">
+        <p class="eyebrow">Youth hockey training | South Windsor, CT</p>
+        <h1>More reps, more feedback, more growth.</h1>
+        <p class="hero-text">
+          Small-group clinics and private lessons led by a trusted local coach. Book a session, join a waitlist, or share your player's goals so there is always a clear next step.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="/clinics">Book a Clinic</a>
+          <a class="button button-secondary" href="/private-lessons">Request a Private Lesson</a>
+        </div>
+        <div class="hero-chips">
+          <span>Ages 6-14</span>
+          <span>Small-group instruction</span>
+          <span>South Windsor roots</span>
+          <span>USA Hockey certified</span>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <strong><%= stats.upcomingCount %></strong>
+            <span>upcoming sessions</span>
+          </div>
+          <div>
+            <strong><%= stats.openClinics %></strong>
+            <span>open to book</span>
+          </div>
+          <div>
+            <strong><%= stats.waitlistClinics %></strong>
+            <span>waitlists available</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-panel hero-board">
+        <div class="hero-board-intro">
+          <p class="panel-kicker">Built for busy parents</p>
+          <h2>Four ways to move forward.</h2>
+        </div>
+        <div class="hero-route-stack">
+          <article class="route-tile">
+            <p class="eyebrow">Open clinic</p>
+            <h3>Book now</h3>
+            <p>See age range, skill fit, timing, and spots, then submit in minutes.</p>
+            <a class="text-link" href="/clinics">Browse open sessions</a>
+          </article>
+          <article class="route-tile">
+            <p class="eyebrow">Full clinic</p>
+            <h3>Join the waitlist</h3>
+            <p>If the right session is full, stay in line for the next opening.</p>
+            <a class="text-link" href="/clinics">Find full sessions</a>
+          </article>
+          <article class="route-tile">
+            <p class="eyebrow">Need flexibility?</p>
+            <h3>Request a private lesson</h3>
+            <p>Share your player's schedule and goals, and we will build the right plan.</p>
+            <a class="text-link" href="/private-lessons">Start a request</a>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-heading">
+        <p class="eyebrow">Train with Coach Swerbo</p>
+        <h2>Trusted local coaching, development-first approach.</h2>
+        <p class="section-copy">
+          Coach Adam Swierbutowicz brings South Windsor roots, college playing experience, and a clear teaching style that gives parents confidence at every step.
+        </p>
+      </div>
+      <div class="coach-feature">
+        <div class="coach-image-wrap">
+          <img class="coach-image" src="<%= profile.imagePath %>" alt="<%= profile.imageAlt %>" />
+        </div>
+        <div class="coach-copy-card">
+          <% profile.homepageIntro.forEach((paragraph) => { %>
+            <p><%= paragraph %></p>
+          <% }) %>
+          <ul class="bullet-list coach-bullets">
+            <% profile.homepageHighlights.forEach((highlight) => { %>
+              <li><%= highlight %></li>
+            <% }) %>
+          </ul>
+          <div class="coach-stat-row">
+            <div>
+              <strong>35+</strong>
+              <span>years playing experience</span>
+            </div>
+            <div>
+              <strong>10+</strong>
+              <span>years coaching youth</span>
+            </div>
+            <div>
+              <strong>6-14</strong>
+              <span>ages served</span>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <a class="button" href="/clinics">Book a Clinic</a>
+            <a class="button button-secondary" href="/private-lessons">Request a Private Lesson</a>
+            <a class="text-link" href="/about-coach">Read full coach bio</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-ice">
+    <div class="shell">
+      <div class="section-heading-row">
+        <div class="section-heading">
+          <p class="eyebrow">Programs and paths</p>
+          <h2>Choose the path that fits your family right now.</h2>
+          <p class="section-copy">
+            Structured group reps, waitlist spots for full sessions, and private lessons for targeted one-on-one work.
+          </p>
+        </div>
+      </div>
+      <div class="offering-grid">
+        <article class="offering-card">
+          <p class="eyebrow">Clinic booking</p>
+          <h3>Small-group skill sessions</h3>
+          <p>Compare clinics by age band, player level, session focus, and availability before you submit.</p>
+          <ul class="bullet-list mini-list">
+            <li>Structured reps with clear session goals</li>
+            <li>Age range, level, and open spots shown upfront</li>
+          </ul>
+          <a class="button" href="/clinics">Book a Clinic</a>
+        </article>
+        <article class="offering-card">
+          <p class="eyebrow">Waitlist path</p>
+          <h3>Stay in the mix</h3>
+          <p>If the right clinic is already full, parents can still raise their hand and stay in line for an opening.</p>
+          <ul class="bullet-list mini-list">
+            <li>Full clinics route straight to waitlist</li>
+            <li>No lost interest, always a next step</li>
+          </ul>
+          <a class="button button-secondary" href="/clinics">Join the Waitlist</a>
+        </article>
+        <article class="offering-card">
+          <p class="eyebrow">Flexible training</p>
+          <h3>Private lessons</h3>
+          <p>Ideal for targeted skill work, schedule flexibility, or players who need a more personal development plan.</p>
+          <ul class="bullet-list mini-list">
+            <li>1-on-1 or compatible small private groups</li>
+            <li>Share goals and availability first</li>
+          </ul>
+          <a class="button button-ghost" href="/private-lessons">Request a Private Lesson</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-heading-row">
+        <div class="section-heading">
+          <p class="eyebrow">Upcoming clinics</p>
+          <h2>Next available training sessions.</h2>
+          <p class="section-copy">
+            Clean cards, clear status, and direct next actions for booking, waitlist, or a more flexible training path.
+          </p>
+        </div>
+        <div class="section-actions">
+          <a class="button" href="/clinics">Book a Clinic</a>
+          <a class="button button-ghost" href="/contact">Need help choosing?</a>
+        </div>
+      </div>
+      <% if (clinics.length) { %>
+        <div class="clinic-grid">
+          <% clinics.forEach((clinic) => { %>
+            <%- include("partials/clinic-card", { clinic }) %>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <h3>New clinics are being scheduled now.</h3>
+          <p>Request a private lesson or tell us what schedule would work for your family.</p>
+          <div class="hero-actions">
+            <a class="button" href="/private-lessons">Request a Private Lesson</a>
+            <a class="button button-secondary" href="/contact">Express Interest</a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <%- include("partials/cta-strip") %>
+</main>
+
+<%- include("partials/footer") %>

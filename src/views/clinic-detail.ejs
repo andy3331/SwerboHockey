@@ -1,0 +1,292 @@
+<%- include("partials/head") %>
+<%- include("partials/header") %>
+
+<main>
+  <section class="page-hero">
+    <div class="shell detail-hero">
+      <div class="detail-heading">
+        <p class="eyebrow">Clinic detail</p>
+        <h1><%= clinic.title %></h1>
+        <p class="page-intro"><%= clinic.description %></p>
+        <div class="hero-chips">
+          <span>Ages <%= clinic.age_min %>-<%= clinic.age_max %></span>
+          <span><%= clinic.skill_band %></span>
+          <span><%= clinic.location.city %>, <%= clinic.location.state %></span>
+        </div>
+      </div>
+      <div class="detail-summary">
+        <span class="badge <%= clinic.status.className %>"><%= clinic.status.label %></span>
+        <strong><%= clinic.spotsRemaining %> spots remaining</strong>
+        <span><%= clinic.fillPercent %>% filled</span>
+        <div class="detail-summary-list">
+          <span><%= clinic.dateLabel %></span>
+          <span><%= clinic.start_time %> to <%= clinic.end_time %></span>
+          <span><%= clinic.priceLabel %></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell detail-grid">
+      <article class="content-card">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Session overview</p>
+          <h2>What families should know before they submit.</h2>
+        </div>
+        <div class="info-stack">
+          <article class="checklist-card">
+            <p class="eyebrow">Best fit</p>
+            <h3>Players who want more focused reps.</h3>
+            <p>This session is built for players who benefit from small-group structure, clear correction, and direct skill feedback.</p>
+          </article>
+          <article class="checklist-card">
+            <p class="eyebrow">What happens next</p>
+            <h3>Request first, follow-up second.</h3>
+            <p>Once the form is submitted, your family stays in the queue and receives next-step details directly from the program.</p>
+          </article>
+        </div>
+        <dl class="detail-list">
+          <div>
+            <dt>Coach</dt>
+            <dd><%= clinic.coach.full_name %></dd>
+          </div>
+          <div>
+            <dt>Age range</dt>
+            <dd><%= clinic.age_min %>-<%= clinic.age_max %></dd>
+          </div>
+          <div>
+            <dt>Skill band</dt>
+            <dd><%= clinic.skill_band %></dd>
+          </div>
+          <div>
+            <dt>Session focus</dt>
+            <dd><%= clinic.sessionFocus %></dd>
+          </div>
+          <div>
+            <dt>Date and time</dt>
+            <dd><%= clinic.dateLabel %> | <%= clinic.start_time %> to <%= clinic.end_time %></dd>
+          </div>
+          <div>
+            <dt>Location</dt>
+            <dd><%= clinic.location.name %>, <%= clinic.location.city %>, <%= clinic.location.state %></dd>
+          </div>
+          <div>
+            <dt>Price</dt>
+            <dd><%= clinic.priceLabel %></dd>
+          </div>
+          <div>
+            <dt>Equipment notes</dt>
+            <dd><%= clinic.equipment_notes %></dd>
+          </div>
+          <div>
+            <dt>FAQs / policy</dt>
+            <dd>Final session logistics and policy details are shared during follow-up.</dd>
+          </div>
+        </dl>
+        <div class="coach-note">
+          <p class="eyebrow">Need a different fit?</p>
+          <p>If this exact session is not right, use the private lesson or contact path below so your family still stays in the queue.</p>
+          <div class="hero-actions">
+            <a class="button button-small button-ghost" href="/private-lessons">Private Lesson</a>
+            <a class="button button-small button-ghost" href="/contact">Express Interest</a>
+          </div>
+        </div>
+      </article>
+
+      <aside class="form-panel">
+        <div class="form-intro-box">
+          <p class="eyebrow">Before you submit</p>
+          <ul class="form-trust-list">
+            <li>Booking requests save the lead right away</li>
+            <li>Booked families complete a parent waiver before participation is finalized</li>
+            <li>Full clinics route to waitlist instead of stopping</li>
+            <li>A private lesson remains available if this is not the right fit</li>
+          </ul>
+        </div>
+        <% if (clinic.status.bookingMode === "book") { %>
+          <p class="eyebrow">Book this clinic</p>
+          <h2>Reserve a spot request</h2>
+          <p class="form-copy">Complete the short form below and we will save your clinic request right away. The confirmation step will also route you to the waiver workflow.</p>
+          <% if (clinic.needsMinimumNotice) { %>
+            <div class="notice notice-info">
+              This session will be confirmed once it reaches the minimum group size of <%= clinic.minimum_enrollment %> players.
+            </div>
+          <% } %>
+          <%- include("partials/notice") %>
+          <form class="stack-form" method="post" action="/forms/bookings">
+            <input type="hidden" name="clinic_id" value="<%= clinic.id %>" />
+            <input type="hidden" name="clinic_slug" value="<%= clinic.slug %>" />
+            <div class="form-grid">
+              <label>
+                Parent first name
+                <input name="parent_first_name" value="<%= form.parent_first_name || '' %>" required />
+              </label>
+              <label>
+                Parent last name
+                <input name="parent_last_name" value="<%= form.parent_last_name || '' %>" required />
+              </label>
+              <label>
+                Parent email
+                <input type="email" name="parent_email" value="<%= form.parent_email || '' %>" required />
+              </label>
+              <label>
+                Parent phone
+                <input type="tel" name="parent_phone" value="<%= form.parent_phone || '' %>" required />
+              </label>
+              <label>
+                Player first name
+                <input name="player_first_name" value="<%= form.player_first_name || '' %>" required />
+              </label>
+              <label>
+                Player last name
+                <input name="player_last_name" value="<%= form.player_last_name || '' %>" required />
+              </label>
+              <label>
+                Player age
+                <input type="number" min="5" max="18" name="player_age" value="<%= form.player_age || '' %>" required />
+              </label>
+              <label>
+                Skill level
+                <input name="player_skill_level" value="<%= form.player_skill_level || '' %>" required />
+              </label>
+              <label>
+                Position
+                <input name="player_position" value="<%= form.player_position || '' %>" />
+              </label>
+              <label>
+                Current team
+                <input name="player_team" value="<%= form.player_team || '' %>" />
+              </label>
+            </div>
+            <label>
+              Goals or notes
+              <textarea name="goals" rows="4" required><%= form.goals || '' %></textarea>
+            </label>
+            <button class="button" type="submit">Submit Clinic Request</button>
+          </form>
+        <% } else if (clinic.status.bookingMode === "waitlist") { %>
+          <p class="eyebrow">This clinic is full</p>
+          <h2>Join the waitlist</h2>
+          <p class="form-copy">We will save your family on the waitlist and follow up if a spot opens.</p>
+          <%- include("partials/notice") %>
+          <form class="stack-form" method="post" action="/forms/waitlist">
+            <input type="hidden" name="clinic_id" value="<%= clinic.id %>" />
+            <input type="hidden" name="clinic_slug" value="<%= clinic.slug %>" />
+            <div class="form-grid">
+              <label>
+                Parent first name
+                <input name="parent_first_name" value="<%= form.parent_first_name || '' %>" required />
+              </label>
+              <label>
+                Parent last name
+                <input name="parent_last_name" value="<%= form.parent_last_name || '' %>" required />
+              </label>
+              <label>
+                Parent email
+                <input type="email" name="parent_email" value="<%= form.parent_email || '' %>" required />
+              </label>
+              <label>
+                Parent phone
+                <input type="tel" name="parent_phone" value="<%= form.parent_phone || '' %>" required />
+              </label>
+              <label>
+                Player first name
+                <input name="player_first_name" value="<%= form.player_first_name || '' %>" required />
+              </label>
+              <label>
+                Player last name
+                <input name="player_last_name" value="<%= form.player_last_name || '' %>" required />
+              </label>
+              <label>
+                Player age
+                <input type="number" min="5" max="18" name="player_age" value="<%= form.player_age || '' %>" required />
+              </label>
+              <label>
+                Skill level
+                <input name="player_skill_level" value="<%= form.player_skill_level || '' %>" required />
+              </label>
+            </div>
+            <label>
+              Notes
+              <textarea name="goals" rows="4"><%= form.goals || '' %></textarea>
+            </label>
+            <button class="button" type="submit">Join the Waitlist</button>
+          </form>
+        <% } else if (clinic.status.bookingMode === "interest") { %>
+          <p class="eyebrow">Tentative session</p>
+          <h2>Reserve interest</h2>
+          <p class="form-copy">This session is being built now. Submit interest and we will follow up once it reaches the minimum group size of <%= clinic.minimum_enrollment %> players.</p>
+          <%- include("partials/notice") %>
+          <form class="stack-form" method="post" action="/forms/general-interest">
+            <input type="hidden" name="return_to" value="clinic" />
+            <input type="hidden" name="clinic_slug" value="<%= clinic.slug %>" />
+            <input type="hidden" name="source" value="tentative_clinic_interest" />
+            <input type="hidden" name="source_detail" value="<%= clinic.title %>" />
+            <input type="hidden" name="interest_type" value="Tentative clinic interest" />
+            <div class="form-grid">
+              <label>
+                Parent first name
+                <input name="parent_first_name" value="<%= form.parent_first_name || '' %>" required />
+              </label>
+              <label>
+                Parent last name
+                <input name="parent_last_name" value="<%= form.parent_last_name || '' %>" required />
+              </label>
+              <label>
+                Parent email
+                <input type="email" name="parent_email" value="<%= form.parent_email || '' %>" required />
+              </label>
+              <label>
+                Parent phone
+                <input type="tel" name="parent_phone" value="<%= form.parent_phone || '' %>" required />
+              </label>
+              <label>
+                Player first name
+                <input name="player_first_name" value="<%= form.player_first_name || '' %>" />
+              </label>
+              <label>
+                Player last name
+                <input name="player_last_name" value="<%= form.player_last_name || '' %>" />
+              </label>
+              <label>
+                Player age
+                <input type="number" min="5" max="18" name="player_age" value="<%= form.player_age || '' %>" required />
+              </label>
+              <label>
+                Player level
+                <input name="player_skill_level" value="<%= form.player_skill_level || '' %>" />
+              </label>
+            </div>
+            <label>
+              Availability or notes
+              <textarea name="availability_notes" rows="4"><%= form.availability_notes || '' %></textarea>
+            </label>
+            <button class="button" type="submit">Reserve Interest</button>
+          </form>
+        <% } else { %>
+          <p class="eyebrow">Session unavailable</p>
+          <h2>This clinic is not currently bookable.</h2>
+          <p class="form-copy">This session is no longer open for booking. Use the options below so your family still has a clear next step.</p>
+          <div class="notice notice-info">
+            Request a private lesson or share your player's needs and we will route the best next option for your family.
+          </div>
+          <div class="hero-actions">
+            <a class="button" href="/private-lessons">Request a Private Lesson</a>
+            <a class="button button-secondary" href="/clinics">View Other Clinics</a>
+            <a class="button button-ghost" href="/contact">Express Interest</a>
+          </div>
+        <% } %>
+
+        <div class="support-links">
+          <a href="/private-lessons">Request a Private Lesson</a>
+          <a href="/contact">Contact Us</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <%- include("partials/cta-strip") %>
+</main>
+
+<%- include("partials/footer") %>

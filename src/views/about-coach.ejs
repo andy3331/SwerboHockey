@@ -1,0 +1,104 @@
+<%- include("partials/head") %>
+<%- include("partials/header") %>
+<%
+  const profile = typeof coachProfile !== "undefined"
+    ? coachProfile
+    : {
+        imagePath: "/coach-adam.jpg",
+        imageAlt: "Coach Adam Swierbutowicz at the rink",
+        aboutIntro: "Coach Adam Swierbutowicz (\"Swerbo\") is a South Windsor coach focused on skills, skating, and strong player development.",
+        roleSummary: "He brings local roots, college hockey experience, and a development-first approach to every session.",
+        background: ["Coach Adam has deep roots in South Windsor hockey and long-term experience helping young players improve."],
+        playingCareer: ["His playing path includes South Windsor High School success and NCAA Division III hockey at Western New England University."],
+        coachingExperience: ["His coaching work centers on better fundamentals, stronger skating, and instruction players can apply right away."],
+        developmentPhilosophy: ["He focuses on holistic player development, including fundamentals, hockey IQ, and confidence."],
+        homepageHighlights: [
+          "South Windsor hockey roots",
+          "College hockey experience",
+          "Player development focus",
+          "USA Hockey certified coaching background"
+        ]
+      };
+%>
+
+<main>
+  <section class="page-hero">
+    <div class="shell coach-page-hero">
+      <div class="coach-image-wrap coach-image-wrap-large">
+        <img class="coach-image coach-image-large" src="<%= profile.imagePath %>" alt="<%= profile.imageAlt %>" />
+      </div>
+      <div class="coach-page-intro">
+        <p class="eyebrow">About Coach Swerbo</p>
+        <h1>Local roots. Strong fundamentals. Development families can trust.</h1>
+        <p class="page-intro"><%= profile.aboutIntro %></p>
+        <p class="page-intro"><%= profile.roleSummary %></p>
+        <div class="hero-chips">
+          <span>South Windsor roots</span>
+          <span>NCAA Division III background</span>
+          <span>USA Hockey Level 4 certified</span>
+        </div>
+        <div class="hero-actions">
+          <a class="button" href="/clinics">Book a Clinic</a>
+          <a class="button button-secondary" href="/private-lessons">Request a Private Lesson</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell about-grid">
+      <article class="content-card about-card">
+        <p class="eyebrow">Background</p>
+        <h2>Built from the South Windsor hockey path.</h2>
+        <% profile.background.forEach((paragraph) => { %>
+          <p><%= paragraph %></p>
+        <% }) %>
+      </article>
+      <article class="content-card about-card">
+        <p class="eyebrow">Playing career</p>
+        <h2>Competitive experience with local meaning.</h2>
+        <% profile.playingCareer.forEach((paragraph) => { %>
+          <p><%= paragraph %></p>
+        <% }) %>
+      </article>
+      <article class="content-card about-card">
+        <p class="eyebrow">Coaching experience</p>
+        <h2>Instruction designed for real player improvement.</h2>
+        <% profile.coachingExperience.forEach((paragraph) => { %>
+          <p><%= paragraph %></p>
+        <% }) %>
+      </article>
+      <article class="content-card about-card">
+        <p class="eyebrow">Development philosophy</p>
+        <h2>Holistic growth on and off the ice.</h2>
+        <% profile.developmentPhilosophy.forEach((paragraph) => { %>
+          <p><%= paragraph %></p>
+        <% }) %>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell academy-strip">
+      <article class="academy-stat-card">
+        <p class="eyebrow">Local trust</p>
+        <h3>South Windsor roots matter.</h3>
+        <p>Families want instruction from someone who understands the local hockey path and communicates in a grounded way.</p>
+      </article>
+      <article class="academy-stat-card">
+        <p class="eyebrow">Playing background</p>
+        <h3>College experience, youth focus.</h3>
+        <p>Competitive credibility supports the coaching, but the sessions stay centered on age-appropriate player development.</p>
+      </article>
+      <article class="academy-stat-card">
+        <p class="eyebrow">Coaching lens</p>
+        <h3>Fundamentals first, confidence built in.</h3>
+        <p>The goal is better skating, better habits, and better decision-making that players can carry into team settings.</p>
+      </article>
+    </div>
+  </section>
+
+  <%- include("partials/cta-strip") %>
+</main>
+
+<%- include("partials/footer") %>

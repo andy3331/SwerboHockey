@@ -1,0 +1,148 @@
+<%- include("partials/head") %>
+<%- include("partials/header") %>
+
+<main>
+  <section class="page-hero">
+    <div class="shell detail-hero">
+      <div class="success-panel confirmation-hero">
+        <p class="eyebrow"><%= thanks.eyebrow %></p>
+        <h1><%= thanks.title %></h1>
+        <p class="page-intro"><%= thanks.intro %></p>
+        <p class="page-intro"><%= thanks.detail %></p>
+        <div class="hero-actions">
+          <a class="button" href="<%= thanks.primaryCta.href %>"><%= thanks.primaryCta.label %></a>
+          <a class="button button-secondary" href="<%= thanks.secondaryCta.href %>"><%= thanks.secondaryCta.label %></a>
+          <a class="button button-ghost" href="<%= thanks.tertiaryCta.href %>"><%= thanks.tertiaryCta.label %></a>
+        </div>
+      </div>
+
+      <div class="detail-summary confirmation-summary">
+        <p class="eyebrow">Next steps</p>
+        <div class="confirmation-step-list">
+          <% thanks.nextSteps.forEach((step, index) => { %>
+            <div class="confirmation-step">
+              <strong>0<%= index + 1 %></strong>
+              <p><%= step %></p>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell detail-grid">
+      <article class="content-card">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Confirmation details</p>
+          <h2>Everything your family needs for the next step.</h2>
+        </div>
+
+        <% if (thanks.sessionDetails.length) { %>
+          <dl class="detail-list confirmation-detail-list">
+            <% thanks.sessionDetails.forEach((item) => { %>
+              <div>
+                <dt><%= item.label %></dt>
+                <dd><%= item.value %></dd>
+              </div>
+            <% }) %>
+          </dl>
+        <% } %>
+
+        <div class="info-stack">
+          <% thanks.logistics.forEach((item) => { %>
+            <article class="checklist-card">
+              <p class="eyebrow"><%= item.label %></p>
+              <p><%= item.value %></p>
+            </article>
+          <% }) %>
+        </div>
+
+        <% if (thanks.type === "booking") { %>
+          <div class="waiver-callout">
+            <p class="eyebrow">Waiver workflow</p>
+            <h3>Waiver completion is required before participation is finalized.</h3>
+            <p>
+              Use the waiver step now so there is no delay before the session. If you need help with the process, use the contact path and reference your player and clinic.
+            </p>
+            <div class="hero-actions">
+              <a class="button" href="/waiver">Complete Waiver</a>
+              <a class="button button-ghost" href="/contact">Need help?</a>
+            </div>
+          </div>
+        <% } %>
+      </article>
+
+      <aside class="form-panel confirmation-sidebar">
+        <div class="form-intro-box">
+          <p class="eyebrow">Follow-up message stub</p>
+          <h2>Confirmation content ready for email or notification.</h2>
+          <p class="form-copy">
+            This mirrors the message content that can later be sent automatically after submission.
+          </p>
+        </div>
+
+        <article class="checklist-card message-preview-card">
+          <p class="eyebrow">Subject</p>
+          <p class="message-preview-line"><%= thanks.messagePreview.subject %></p>
+          <p class="eyebrow">Body preview</p>
+          <p><%= thanks.messagePreview.body %></p>
+        </article>
+
+        <article class="checklist-card">
+          <p class="eyebrow"><%= thanks.contact.contactLabel %></p>
+          <p><%= thanks.contact.contactDetail %></p>
+          <a class="text-link" href="<%= thanks.contact.contactHref %>"><%= thanks.contact.contactCta %></a>
+        </article>
+
+        <div class="support-links">
+          <a href="/clinics">View clinics</a>
+          <a href="/private-lessons">Request a private lesson</a>
+          <a href="/contact">Express interest</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell next-step-grid">
+      <article class="checklist-card">
+        <p class="eyebrow">More clinics</p>
+        <h3>Keep another option in view.</h3>
+        <p>Browse current sessions if you want another date, age group, or backup plan ready.</p>
+        <a class="text-link" href="/clinics">View more clinics</a>
+      </article>
+      <article class="checklist-card">
+        <p class="eyebrow">Need flexibility?</p>
+        <h3>Private lessons stay open.</h3>
+        <p>If the posted session changes or timing tightens, private requests give your family another clear path.</p>
+        <a class="text-link" href="/private-lessons">Request a private lesson</a>
+      </article>
+      <article class="checklist-card">
+        <p class="eyebrow">Questions</p>
+        <h3>Keep the conversation moving.</h3>
+        <p>Use the contact path if you need to update details, add context, or ask about the next step.</p>
+        <a class="text-link" href="/contact">Contact the program</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="fallback-band">
+        <div>
+          <p class="eyebrow">No dead ends</p>
+          <h2>Your family is saved in the system, and there is still a clear next step if plans change.</h2>
+        </div>
+        <div class="fallback-actions">
+          <a class="button" href="/clinics">Book a Clinic</a>
+          <a class="button button-secondary" href="/private-lessons">Request a Private Lesson</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%- include("partials/cta-strip") %>
+</main>
+
+<%- include("partials/footer") %>

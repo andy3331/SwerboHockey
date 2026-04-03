@@ -1,0 +1,39 @@
+<article class="clinic-card">
+  <div class="card-top">
+    <span class="badge <%= clinic.status.className %>"><%= clinic.status.label %></span>
+  </div>
+  <h3><%= clinic.title %></h3>
+  <p class="clinic-summary"><%= clinic.description %></p>
+  <div class="clinic-quick-info">
+    <span><strong><%= clinic.dateLabel %></strong></span>
+    <span><%= clinic.start_time %> to <%= clinic.end_time %></span>
+  </div>
+  <dl class="clinic-meta">
+    <div>
+      <dt>Ages</dt>
+      <dd><%= clinic.age_min %>-<%= clinic.age_max %></dd>
+    </div>
+    <div>
+      <dt>Level</dt>
+      <dd><%= clinic.skill_band %></dd>
+    </div>
+    <div>
+      <dt>Where</dt>
+      <dd><%= clinic.location.name %>, <%= clinic.location.city %>, <%= clinic.location.state %></dd>
+    </div>
+    <div>
+      <dt>Price</dt>
+      <dd><%= clinic.priceLabel %></dd>
+    </div>
+  </dl>
+  <div class="spots-row">
+    <span class="spots"><%= clinic.spotsRemaining %> spots left</span>
+    <% if (clinic.needsMinimumNotice) { %>
+      <span class="micro-note">Pending minimum of <%= clinic.minimum_enrollment %> players</span>
+    <% } %>
+  </div>
+  <div class="card-actions">
+    <a class="button" href="/clinics/<%= clinic.slug %>"><%= clinic.status.actionLabel %></a>
+    <a class="text-link" href="/private-lessons">Request a Private Lesson</a>
+  </div>
+</article>

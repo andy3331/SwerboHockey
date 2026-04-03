@@ -1,0 +1,11 @@
+node_modules/
+npm-debug.log*
+data/store.json
+AGENTS.md
+PLANS.md
+agents/
+Agents/
+docs/
+Docs/
+.claude/
+*.zip

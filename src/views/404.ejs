@@ -1,0 +1,46 @@
+<%- include("partials/head") %>
+<%- include("partials/header") %>
+
+<main>
+  <section class="page-hero">
+    <div class="shell">
+      <div class="success-panel">
+        <p class="eyebrow">Page not found</p>
+        <h1>That page is not available.</h1>
+        <p class="page-intro">Use one of the paths below so your family can still find the right next step.</p>
+        <div class="hero-actions">
+          <a class="button" href="/clinics">Book a Clinic</a>
+          <a class="button button-secondary" href="/private-lessons">Request a Private Lesson</a>
+          <a class="button button-ghost" href="/contact">Express Interest</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell next-step-grid">
+      <article class="checklist-card">
+        <p class="eyebrow">Book</p>
+        <h3>See available clinics.</h3>
+        <p>Open sessions and waitlist routes are all listed in one place.</p>
+        <a class="text-link" href="/clinics">Go to clinics</a>
+      </article>
+      <article class="checklist-card">
+        <p class="eyebrow">Flexible option</p>
+        <h3>Request a private lesson.</h3>
+        <p>If the posted clinic path is not a fit, private requests stay open.</p>
+        <a class="text-link" href="/private-lessons">Request a private lesson</a>
+      </article>
+      <article class="checklist-card">
+        <p class="eyebrow">Still deciding</p>
+        <h3>Tell us what would help.</h3>
+        <p>Share the age group, schedule, or type of support your family needs.</p>
+        <a class="text-link" href="/contact">Express Interest</a>
+      </article>
+    </div>
+  </section>
+
+  <%- include("partials/cta-strip") %>
+</main>
+
+<%- include("partials/footer") %>
