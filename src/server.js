@@ -119,6 +119,10 @@ app.get("/waiver", (req, res) => {
   });
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).send("ok");
+});
+
 app.get("/admin", (req, res) => {
   const overview = getAdminOverview();
 

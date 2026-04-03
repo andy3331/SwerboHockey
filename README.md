@@ -26,6 +26,26 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) for the public site and [http://localhost:3000/admin](http://localhost:3000/admin) for the internal dashboard.
 
+## Render Deploy
+
+This repo includes `render.yaml` for a simple Render web service deploy.
+
+Render setup:
+
+```text
+Branch: codex/public-launch
+Build Command: npm install
+Start Command: npm start
+```
+
+After deployment, share the Render URL with the client for review.
+
+Important:
+
+- The current MVP stores leads and bookings in a local JSON file.
+- That is acceptable for short-lived review environments.
+- It is not a production-safe persistence strategy unless you attach persistent storage or move to a real database.
+
 ## Notes
 
 - This repo is intended to contain only the application code and public assets.
